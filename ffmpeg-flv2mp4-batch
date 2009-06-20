@@ -1,0 +1,7 @@
+#!/bin/sh
+for i in $*; do
+  stripped=`echo $i | sed 's/"//g'`
+  base=`basename ${stripped} .flv`
+  cmd="ffmpeg-flv ${stripped} ${base}.mp4"
+  nice $cmd
+done;

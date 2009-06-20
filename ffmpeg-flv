@@ -1,0 +1,5 @@
+#!/bin/sh
+IN=$1
+OUT=$2
+
+ffmpeg -i $IN -ar 22050 -sameq $OUT

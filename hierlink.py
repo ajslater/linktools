@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python2.4 -OO
 """
 Hierlink makes a mirrored tree of directories with symlinks to the 
 source files

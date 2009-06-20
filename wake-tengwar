@@ -1,0 +1,2 @@
+#!/bin/sh
+wakeonlan -i hakama.sl8r.net 00:0C:76:B3:42:23
