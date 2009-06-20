@@ -1,0 +1,19 @@
+#!/bin/sh
+
+if [[ $1 = '-r' ]]; then
+  RECURSE=true
+  shift;
+fi
+
+SOURCE=$1
+
+IFS=$'\n'
+for filename in `ls -1`; do 
+   if [[ -h $filename ]]; then
+     ln -sf  "$SOURCE/$filename" .
+   elif [[ $RECURSE && -d $filename ]]; then
+     cd $filename
+     relink -r $SOURCE/$filename
+     cd ..
+   fi
+done;

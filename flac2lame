@@ -1,0 +1,5 @@
+#!/bin/sh
+INFILE="$1"
+OUTFILE=`basename "$1" .flac`.mp3
+
+flac -dc "$INFILE" | lame --preset standard - "$OUTFILE"

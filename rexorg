@@ -1,0 +1,4 @@
+#!/bin/sh
+killxorg
+sleep 1
+sudo /etc/init.d/gdm start

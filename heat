@@ -1,0 +1,10 @@
+#!/bin/bash
+sensors
+for drive in `ls /dev/[hs]d?`; do
+  sudo hddtemp $drive 2> /dev/null
+done;
+
+CPUINFO_CUR_FREQ=/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
+cpufreq=`sudo cat $CPUINFO_CUR_FREQ`
+cpupcnt=$(($cpufreq/20000))
+echo cpufreq: ${cpufreq:0:1}.${cpufreq:1:1}Ghz '('$cpupcnt'%)'

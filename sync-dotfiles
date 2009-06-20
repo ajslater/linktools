@@ -1,0 +1,2 @@
+#!/bin/sh
+rsync -avz --exclude-from ~/bin/dotfiles.exclude $HOME/ tengwar.local:Backup/`hostname`/aj
