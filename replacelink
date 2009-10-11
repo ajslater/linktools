@@ -1,0 +1,6 @@
+#!/bin/sh
+
+newlink=`readlink "$1" | sed 's/home/Users/'`
+if [ -n "$newlink" ]; then
+    ln -sf "$newlink"
+fi
