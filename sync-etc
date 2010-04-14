@@ -1,2 +1,0 @@
-#!/bin/sh
-sudo rsync -av /etc aj@tengwar.local:Backup/`hostname`/
