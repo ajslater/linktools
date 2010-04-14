@@ -1,8 +1,0 @@
-#!/bin/sh
-INTERFACE=wlan0
-MODULE=ipw2200
-
-sudo ifdown $INTERFACE
-sudo modprobe -r $MODULE
-sudo modprobe $MODULE
-sudo ifup $INTERFACE
