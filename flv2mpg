@@ -1,2 +1,0 @@
-#!/bin/sh
-ffmpeg -i $1 -ab 128 -ar 44100 -ac 2 ${out}.mpg
