@@ -1,4 +1,4 @@
-#!/usr/bin/python2.4 -OO
+#!/usr/bin/env python
 #
 """
  Converts relative symlinks into absolute symlinks

@@ -23,7 +23,8 @@ def get_options_and_arguments() :
     (options, arguments) = parser.parse_args()
   
     if len(arguments) <= 0 :
-        print usage
+       parser.print_help()
+       exit(1)
 
     return (options, arguments)
 
