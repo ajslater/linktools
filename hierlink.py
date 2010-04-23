@@ -17,8 +17,8 @@ def get_options_and_arguments() :
         default=0, help="crease symbolic links intead of hard links")
     parser.add_option("-f", "--flatten", action="store_true", dest="flatten",
         default=0, help="Does not create a directory structure on the"+
-	"destination side, just a big flat collection of links to the"+ 
-	"source tree")
+    "destination side, just a big flat collection of links to the"+ 
+    "source tree")
 
     (options, arguments) = parser.parse_args()
   
@@ -96,11 +96,4 @@ def main() :
         cd_dir(source_dir, os.getcwd(), options, relpath)
 
 if __name__ == '__main__':
-    # Import Psyco if available
-    try:
-	import psyco
-	print "I'm going psyCo!"
-	psyco.full()
-    except ImportError:
-	pass
     main()
