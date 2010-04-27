@@ -30,7 +30,7 @@ def abs_link_file(link_file_name, options) :
         absolute_source_file_name = os.path.realpath(link_target_file_name)
 
         if options.verbose :
-            print 'Absolutizing symlink to '+absolute_source_file_name
+            print("Absolutizing symlink to", absolute_source_file_name)
         os.remove(link_file_name)
         os.symlink(absolute_source_file_name, link_file_name)
 
@@ -52,11 +52,4 @@ def main() :
     cd_dir(os.getcwd(), options)
 
 if __name__ == '__main__':
-    # Import Psyco if available
-    try:
-       import psyco
-       print "I'm going psyCo!"
-       psyco.full()
-    except ImportError:
-       pass
     main()

@@ -39,12 +39,12 @@ def ln_file(source_filename, dest_filename, options) :
         else :
             pref = 'L'
 
-    print pref+'inking '+source_filename+' to '+dest_filename
+    print(pref+'inking '+source_filename+' to '+dest_filename)
 
     if not os.path.exists(dest_filename) :
         if not os.path.exists(dest_dirname) :
             if options.verbose :                               
-                print 'Creating '+ dest_dirname +' from '+ source_filename
+                print('Creating', dest_dirname, 'from', source_filename)
             os.mkdir(dest_dirname)
       
         if options.symlink :
@@ -92,7 +92,7 @@ def main() :
         relpath = 0
 
     if options.verbose and relpath :
-        print 'Source directory '+source_dir+' is a relative path.'
+        print('Source directory', source_dir, 'is a relative path.')
  
         cd_dir(source_dir, os.getcwd(), options, relpath)
 
