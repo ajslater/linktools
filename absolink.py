@@ -44,7 +44,7 @@ def cd_dir(dir_name, options) :
             abs_link_file(file_name, options)
         elif options.recursive and os.path.isdir(file_name): 
             cd_dir(file_name, options)
-            os.chdir("..");
+            os.chdir("..")
 
 def main() :
     """do the deed"""
