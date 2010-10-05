@@ -3,6 +3,7 @@
 # Version 0.1.0
 
 import os, optparse
+import fnmatch
 
 def getOptionsAndArguments() :
   usage = "usage: %prog [options] <target directory>"
@@ -12,6 +13,9 @@ def getOptionsAndArguments() :
   parser.add_option("-l", "--hardlink", action = "store_true",
                     dest = "hardlink", default = False,
                     help = "create hard links instead of symbolic links")
+  parser.add_option("-i", "--ignore", action = "store",
+                    dest = "ignore", default = None,
+                    help = "ignore paths with this glob")
   opts, args = parser.parse_args()
 
   if not args or not os.path.isdir(args[0]) :
@@ -20,7 +24,7 @@ def getOptionsAndArguments() :
 
   return (opts, args[0])
 
-def lnFile(fileNameFull,fileName,options) :
+def lnFile(fileNameFull, fileName, options) :
 
   if options.verbose :
     if options.hardlink :
@@ -44,6 +48,9 @@ def cdDir(targetDir,options) :
 
   for fileName in targetDirList :
     fileNameFull = os.path.normpath(targetDir+os.sep+fileName)
+    if options.ignore and fnmatch.fnmatch(fileNameFull, options.ignore) :
+        continue
+
     if os.path.isdir(fileNameFull) :
       cdDir(fileNameFull,options)
     else :

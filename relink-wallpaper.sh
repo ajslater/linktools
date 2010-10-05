@@ -1,3 +1,4 @@
 #!/bin/sh
 cd ~/Pictures/Wallpaper.Flat
-flatlink -q ../Wallpaper
+rm -f *
+flatlink ../Wallpaper -i "*.DS_Store"
