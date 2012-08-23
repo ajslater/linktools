@@ -2,64 +2,69 @@
 #
 # Version 0.1.0
 
-import os, optparse
+import os
+import optparse
 import fnmatch
-
-def getOptionsAndArguments() :
-  usage = "usage: %prog [options] <target directory>"
-  parser = optparse.OptionParser(usage=usage)
-  parser.add_option("-q", "--quiet", action = "store_false", dest = "verbose",
-                    default = True, help = "Do not display output")
-  parser.add_option("-l", "--hardlink", action = "store_true",
-                    dest = "hardlink", default = False,
-                    help = "create hard links instead of symbolic links")
-  parser.add_option("-i", "--ignore", action = "store",
-                    dest = "ignore", default = None,
-                    help = "ignore paths with this glob")
-  opts, args = parser.parse_args()
-
-  if not args or not os.path.isdir(args[0]) :
-      parser.usage()
-      sys.exit(1)
-
-  return (opts, args[0])
-
-def lnFile(fileNameFull, fileName, options) :
-
-  if options.verbose :
-    if options.hardlink :
-      pref='Hard '
-    else :
-      pref='Sym'
-    print pref+'linking '+fileNameFull+' to '+fileName
-
-  if (os.path.exists(fileName)) :
-    print 'ERROR '+fileName+'already exists.'
-  else :
-    if options.hardlink :
-      os.link(fileNameFull, fileName)
-    else :
-      os.symlink(fileNameFull, fileName)
+import sys
 
 
-def cdDir(targetDir,options) :
-  targetDirList = os.listdir(targetDir)
-  targetDirList.sort()
+def getOptionsAndArguments():
+    usage = "usage: %prog [options] <target directory>"
+    parser = optparse.OptionParser(usage=usage)
+    parser.add_option("-q", "--quiet", action="store_false",
+                    dest="verbose", default=True,
+                    help="Do not display output")
+    parser.add_option("-l", "--hardlink", action="store_true",
+                    dest="hardlink", default=False,
+                    help="create hard links instead of symbolic links")
+    parser.add_option("-i", "--ignore", action="store",
+                    dest="ignore", default=None,
+                    help="ignore paths with this glob")
+    opts, args = parser.parse_args()
 
-  for fileName in targetDirList :
-    fileNameFull = os.path.normpath(targetDir+os.sep+fileName)
-    if options.ignore and fnmatch.fnmatch(fileNameFull, options.ignore) :
-        continue
+    if not args or not os.path.isdir(args[0]):
+        parser.usage()
+        sys.exit(1)
 
-    if os.path.isdir(fileNameFull) :
-      cdDir(fileNameFull,options)
-    else :
-      lnFile(fileNameFull,fileName,options)
+    return (opts, args[0])
 
 
-def main() :
-  (options, targetDir) = getOptionsAndArguments()
-  cdDir(targetDir,options)
+def lnFile(fileNameFull, fileName, options):
+
+    if options.verbose:
+        if options.hardlink:
+            pref = 'Hard '
+        else:
+            pref = 'Sym'
+        print pref + 'linking ' + fileNameFull + ' to ' + fileName
+
+    if (os.path.exists(fileName)):
+        print 'ERROR ' + fileName + 'already exists.'
+    else:
+        if options.hardlink:
+            os.link(fileNameFull, fileName)
+        else:
+            os.symlink(fileNameFull, fileName)
+
+
+def cdDir(targetDir, options):
+    targetDirList = os.listdir(targetDir)
+    targetDirList.sort()
+
+    for fileName in targetDirList:
+        fileNameFull = os.path.normpath(targetDir + os.sep + fileName)
+        if options.ignore and fnmatch.fnmatch(fileNameFull, options.ignore):
+            continue
+
+        if os.path.isdir(fileNameFull):
+            cdDir(fileNameFull, options)
+        else:
+            lnFile(fileNameFull, fileName, options)
+
+
+def main():
+    (options, targetDir) = getOptionsAndArguments()
+    cdDir(targetDir, options)
 
 
 main()
