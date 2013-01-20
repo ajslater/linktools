@@ -14,13 +14,15 @@ def get_options_and_arguments():
     usage = "usage: %prog [options] <source directory>"
     parser = optparse.OptionParser(usage=usage)
     parser.add_option("-q", "--quiet", action="store_false", dest="verbose",
-        default=1, help="Do not display output")
+                      default=1, help="Do not display output")
     parser.add_option("-s", "--symlink", action="store_true", dest="symlink",
-        default=0, help="crease symbolic links intead of hard links")
+                      default=0,
+                      help="crease symbolic links intead of hard links")
     parser.add_option("-f", "--flatten", action="store_true", dest="flatten",
-        default=0, help="Does not create a directory structure on the" +
-    "destination side, just a big flat collection of links to the" +
-    "source tree")
+                      default=0,
+                      help="Does not create a directory structure on the"
+                      "destination side, just a big flat collection of "
+                      "links to the source tree")
 
     (options, arguments) = parser.parse_args()
 

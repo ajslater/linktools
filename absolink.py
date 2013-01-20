@@ -15,10 +15,12 @@ def get_options_and_arguments():
     usage = "usage: %prog [options]"
     parser = optparse.OptionParser(usage=usage)
     parser.add_option("-q", "--quiet", action="store_false",
-        dest="verbose", default=1, help="Don't give progress info")
+                      dest="verbose", default=1,
+                      help="Don't give progress info")
     parser.add_option("-r", "--recursive", action="store_true",
-        dest="recursive", default=0, help="Converts symbolic"
-    "links to absolute symbolic links ")
+                      dest="recursive", default=0,
+                      help="Converts symbolic links to absolute symbolic"
+                           "links")
 
     options_and_arguments = parser.parse_args()
 

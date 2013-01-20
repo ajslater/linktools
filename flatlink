@@ -7,6 +7,8 @@ import optparse
 import fnmatch
 import sys
 
+__revision__ = '0.1.0'
+
 # TODO: multiple ignore paths
 
 
@@ -14,14 +16,14 @@ def getOptionsAndArguments():
     usage = "usage: %prog [options] <target directory>"
     parser = optparse.OptionParser(usage=usage)
     parser.add_option("-q", "--quiet", action="store_false",
-                    dest="verbose", default=True,
-                    help="Do not display output")
+                      dest="verbose", default=True,
+                      help="Do not display output")
     parser.add_option("-l", "--hardlink", action="store_true",
-                    dest="hardlink", default=False,
-                    help="create hard links instead of symbolic links")
+                      dest="hardlink", default=False,
+                      help="create hard links instead of symbolic links")
     parser.add_option("-i", "--ignore", action="store",
-                    dest="ignore", default=None,
-                    help="ignore paths with this glob")
+                      dest="ignore", default=None,
+                      help="ignore paths with this glob")
     opts, args = parser.parse_args()
 
     if not args or not os.path.isdir(args[0]):
