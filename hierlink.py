@@ -3,7 +3,7 @@
 Hierlink makes a mirrored tree of directories with symlinks to the
 source files
 """
-__revision__ = '0.1.0'
+__version__ = '0.1.0'
 
 import os
 import optparse

@@ -4,7 +4,7 @@
  Converts relative symlinks into absolute symlinks
 """
 
-__revision__ = '0.1.1'
+__version__ = '0.1.1'
 
 import os
 import optparse
