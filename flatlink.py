@@ -46,7 +46,7 @@ def get_options_and_arguments():
     opts, args = parser.parse_args()
 
     if not args or not os.path.isdir(args[0]):
-        parser.usage()
+        parser.print_help()
         sys.exit(1)
 
     compile_ignore_regex(opts)
