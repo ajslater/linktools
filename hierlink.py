@@ -1,16 +1,13 @@
 #!/usr/bin/env python
-"""
-Hierlink makes a mirrored tree of directories with symlinks to the
-source files
-"""
-__version__ = '0.1.0'
-
+"""Make a mirrored tree of directories with symlinks to the source files."""
+from __future__ import print_function
 import os
 import optparse
 
+__version__ = '0.1.0'
 
 def get_options_and_arguments():
-    """parses command line arguments"""
+    """Parse command line arguments."""
     usage = "usage: %prog [options] <source directory>"
     parser = optparse.OptionParser(usage=usage)
     parser.add_option("-q", "--quiet", action="store_false", dest="verbose",
@@ -34,7 +31,7 @@ def get_options_and_arguments():
 
 
 def ln_file(source_filename, dest_filename, options):
-    """Links the target file or creates a mirror directory"""
+    """Link the target file or creates a mirror directory."""
     dest_dirname = os.path.dirname(dest_filename)
 
     if options.verbose:
@@ -58,8 +55,8 @@ def ln_file(source_filename, dest_filename, options):
 
 
 def cd_dir(source_dirname, dest_dirname, options, relpath):
-    """Traverses the source directory tree"""
-    if (not os.path.isdir(dest_dirname)):
+    """Traverse the source directory tree."""
+    if not os.path.isdir(dest_dirname):
         os.mkdir(dest_dirname)
     os.chdir(dest_dirname)
     source_dirlist = os.listdir(source_dirname)
@@ -86,7 +83,7 @@ def cd_dir(source_dirname, dest_dirname, options, relpath):
 
 
 def main():
-    """main"""
+    """Parse arguments and start recursing."""
     (options, arguments) = get_options_and_arguments()
 
     if len(arguments) > 0:

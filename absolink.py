@@ -1,8 +1,5 @@
 #!/usr/bin/env python
-#
-"""
- Converts relative symlinks into absolute symlinks
-"""
+"""Converts relative symlinks into absolute symlinks."""
 
 __version__ = '0.1.1'
 
@@ -11,7 +8,7 @@ import optparse
 
 
 def get_options_and_arguments():
-    """returns the options and the arguments"""
+    """Return the options and the arguments."""
     usage = "usage: %prog [options]"
     parser = optparse.OptionParser(usage=usage)
     parser.add_option("-q", "--quiet", action="store_false",
@@ -28,9 +25,9 @@ def get_options_and_arguments():
 
 
 def abs_link_file(link_file_name, options):
-    """converts the link"""
+    """Convert the link."""
     link_target_file_name = os.readlink(link_file_name)
-    if (not os.path.isabs(link_target_file_name)):
+    if not os.path.isabs(link_target_file_name):
         absolute_source_file_name = os.path.realpath(link_target_file_name)
 
         if options.verbose:
@@ -40,7 +37,7 @@ def abs_link_file(link_file_name, options):
 
 
 def cd_dir(dir_name, options):
-    """finds and descends into subdirectories"""
+    """Find and descend into subdirectories."""
     os.chdir(dir_name)
     dir_list = os.listdir(".")  # os.getcwd())
 
@@ -53,7 +50,7 @@ def cd_dir(dir_name, options):
 
 
 def main():
-    """do the deed"""
+    """Main function."""
     options = get_options_and_arguments()
     cd_dir(os.getcwd(), options)
 
