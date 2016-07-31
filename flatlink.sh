@@ -1,4 +1,6 @@
 #!/bin/bash
+set -o nounset
+set -o errexit
 SRC_DIR="$1"
 TARGET_DIR="$2"
 
