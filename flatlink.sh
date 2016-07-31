@@ -9,7 +9,7 @@ usage() {
 
 function link_if_new() {
   src_path=$(realpath "$1")
-  src_fn=$(basename "$src_path")
+  src_fn="${src_path##*/}"
   dst_path="$TARGET_DIR"/"$src_fn"
   if [[ ! -e "$dst_path" || "$src_path" != $(realpath "$dst_path") ]]; then
     echo ln -sf "$src_path" "$TARGET_DIR"/
