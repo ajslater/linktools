@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [[ $1 = '-r' ]]; then
   RECURSE=true
@@ -8,12 +8,12 @@ fi
 SOURCE=$1
 
 IFS=$'\n'
-for filename in `ls -1`; do 
-   if [[ -h $filename ]]; then
+for filename in *; do 
+   if [[ -h "$filename" ]]; then
      ln -sf  "$SOURCE/$filename" .
    elif [[ $RECURSE && -d $filename ]]; then
-     cd $filename
-     relink -r $SOURCE/$filename
-     cd ..
+     cd "$filename" || exit 1
+     relink -r "$SOURCE/$filename"
+     cd .. || exit 1
    fi
 done;
