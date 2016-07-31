@@ -11,3 +11,6 @@ Recursively relinks relative symbolic links into absolute symbolic links.
 
 # hierlink
 Recursively replicates a director tree but with symbolicly linked files.
+
+# purgelink
+Remove broken symlinks
