@@ -8,6 +8,10 @@ Recursively walks a source directory and creates symbolic links of all those fil
 ### purgelink
 Remove broken symlinks
 
+### reflatlink
+purgelink and then flatlink. I use this to make a macOS wallpaper directory
+from a hierarcical pictures folder.
+
 ## Old
 These others are old and could be made more efficient if I ever used them
 
@@ -15,4 +19,4 @@ These others are old and could be made more efficient if I ever used them
 Recursively relinks relative symbolic links into absolute symbolic links.
 
 ### hierlink
-Recursively replicates a director tree but with symbolicly linked files.
+Recursively replicates a directory tree but with symbolicly linked files.
