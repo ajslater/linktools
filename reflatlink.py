@@ -15,9 +15,10 @@ def purge_flat_links(dest):
 
 def flat_link(src, dest):
     """symlink from a directory hierarchy to a flat dir."""
-    for root, _, filenames in os.walk(src):
+    for root, _, filenames in os.walk(src, followlinks=True):
         for filename in filenames:
-            if filename.startswith('.'):
+            if filename.startswith('.') or '/.' in root:
+                # eliminate dotfiles and dotdirs
                 continue
             source_path = os.path.join(root, filename)
             link_name = os.path.join(dest, filename)
