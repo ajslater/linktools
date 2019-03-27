@@ -1,10 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Make a mirrored tree of directories with symlinks to the source files."""
 from __future__ import print_function
 import os
 import optparse
 
 __version__ = '0.1.0'
+
 
 def get_options_and_arguments():
     """Parse command line arguments."""
@@ -86,7 +87,7 @@ def main():
     """Parse arguments and start recursing."""
     (options, arguments) = get_options_and_arguments()
 
-    if len(arguments) > 0:
+    if arguments:
         source_dir = os.path.normpath(arguments[0])
         relpath = os.path.abspath(source_dir) != source_dir
     else:
@@ -96,6 +97,7 @@ def main():
         print('Source directory', source_dir, 'is a relative path.')
 
         cd_dir(source_dir, os.getcwd(), options, relpath)
+
 
 if __name__ == '__main__':
     main()

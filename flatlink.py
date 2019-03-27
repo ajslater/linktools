@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """symlink from a directory hierarchy to a flat dir."""
 import os
 
@@ -15,7 +15,7 @@ def flat_link(src, dest):
             if os.path.islink(link_name):
                 if os.readlink(link_name) == source_path:
                     continue
-            print "ln {} -> {}".format(source_path, link_name)
+            print("ln {} -> {}".format(source_path, link_name))
             os.symlink(source_path, link_name)
 
 

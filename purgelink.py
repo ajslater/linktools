@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """purge broken links in a flat dir."""
 import os
 
@@ -8,8 +8,8 @@ def purge_flat_links(dest):
     for filename in os.listdir(dest):
         path = os.path.join(dest, filename)
         if os.path.islink(path) and not os.path.exists(os.readlink(path)):
-            print os.readlink(path)
-            print "rm {}".format(path)
+            print(os.readlink(path))
+            print("rm {}".format(path))
             os.remove(path)
 
 

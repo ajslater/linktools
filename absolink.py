@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Converts relative symlinks into absolute symlinks."""
 
 __version__ = '0.1.1'
@@ -53,6 +53,7 @@ def main():
     """Main function."""
     options = get_options_and_arguments()
     cd_dir(os.getcwd(), options)
+
 
 if __name__ == '__main__':
     main()
