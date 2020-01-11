@@ -1,23 +1,32 @@
 #!/usr/bin/env python3
 """Converts relative symlinks into absolute symlinks."""
 
-__version__ = '0.1.1'
+__version__ = "0.1.1"
 
-import os
 import optparse
+import os
 
 
 def get_options_and_arguments():
     """Return the options and the arguments."""
     usage = "usage: %prog [options]"
     parser = optparse.OptionParser(usage=usage)
-    parser.add_option("-q", "--quiet", action="store_false",
-                      dest="verbose", default=1,
-                      help="Don't give progress info")
-    parser.add_option("-r", "--recursive", action="store_true",
-                      dest="recursive", default=0,
-                      help="Converts symbolic links to absolute symbolic"
-                           "links")
+    parser.add_option(
+        "-q",
+        "--quiet",
+        action="store_false",
+        dest="verbose",
+        default=1,
+        help="Don't give progress info",
+    )
+    parser.add_option(
+        "-r",
+        "--recursive",
+        action="store_true",
+        dest="recursive",
+        default=0,
+        help="Converts symbolic links to absolute symbolic" "links",
+    )
 
     options_and_arguments = parser.parse_args()
 
@@ -55,5 +64,5 @@ def main():
     cd_dir(os.getcwd(), options)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

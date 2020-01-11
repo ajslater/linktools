@@ -12,6 +12,7 @@ def relink(src, dest):
 
 if __name__ == "__main__":
     import sys
+
     if len(sys.argv) < 3:
         print("{} <source> <dest>".format(sys.argv[0]))
         exit(1)

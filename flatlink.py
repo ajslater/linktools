@@ -7,7 +7,7 @@ def flat_link(src, dest):
     """symlink from a directory hierarchy to a flat dir."""
     for root, _, filenames in os.walk(src, followlinks=True):
         for filename in filenames:
-            if filename.startswith('.') or '/.' in root:
+            if filename.startswith(".") or "/." in root:
                 # eliminate dotfiles and dotdirs
                 continue
             source_path = os.path.join(root, filename)
@@ -21,4 +21,5 @@ def flat_link(src, dest):
 
 if __name__ == "__main__":
     import sys
+
     flat_link(sys.argv[1], sys.argv[2])

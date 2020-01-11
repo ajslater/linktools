@@ -15,4 +15,5 @@ def purge_flat_links(dest):
 
 if __name__ == "__main__":
     import sys
+
     purge_flat_links(sys.argv[1])
