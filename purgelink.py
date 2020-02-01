@@ -4,7 +4,7 @@ import os
 
 
 def purge_flat_links(dest):
-    """purge broken links in a flat dir."""
+    """Purge broken links in a flat dir."""
     for filename in os.listdir(dest):
         path = os.path.join(dest, filename)
         if os.path.islink(path) and not os.path.exists(os.readlink(path)):

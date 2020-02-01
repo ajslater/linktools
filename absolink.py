@@ -59,7 +59,7 @@ def cd_dir(dir_name, options):
 
 
 def main():
-    """Main function."""
+    """Get options and recursivley link."""
     options = get_options_and_arguments()
     cd_dir(os.getcwd(), options)
 
