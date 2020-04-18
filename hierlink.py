@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 """Make a mirrored tree of directories with symlinks to the source files."""
-from __future__ import print_function
+import argparse
+from pathlib import Path
 
-import optparse
-import os
-
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 
 def get_options_and_arguments():
     """Parse command line arguments."""
     usage = "usage: %prog [options] <source directory>"
-    parser = optparse.OptionParser(usage=usage)
+    parser = argparse.OptionParser(usage=usage)
     parser.add_option(
         "-q",
         "--quiet",
@@ -48,56 +46,53 @@ def get_options_and_arguments():
     return (options, arguments)
 
 
-def ln_file(source_filename, dest_filename, options):
+def ln_file(source_path, dest_path, options):
     """Link the target file or creates a mirror directory."""
-    dest_dirname = os.path.dirname(dest_filename)
-
     if options.verbose:
         if options.symlink:
             pref = "Syml"
         else:
             pref = "L"
 
-    print(pref + "inking " + source_filename + " to " + dest_filename)
+    print(f"{pref}inking {source_path}  to {dest_path}")
 
-    if not os.path.exists(dest_filename):
-        if not os.path.exists(dest_dirname):
+    if not dest_path.exists():
+        dest_dir = dest_path.parent
+        if not dest_dir.exists():
             if options.verbose:
-                print("Creating", dest_dirname, "from", source_filename)
-            os.mkdir(dest_dirname)
+                print(f"Creating {dest_dir} from {source_path}")
+            dest_dir.mkdir()
 
         if options.symlink:
-            os.symlink(source_filename, dest_filename)
+            source_path.symlink_to(dest_path)
         else:
-            os.link(source_filename, dest_filename)
+            source_path.link_to(dest_path)
 
 
-def cd_dir(source_dirname, dest_dirname, options, relpath):
+def process_dir(source_dir, dest_dir, options, relpath):
     """Traverse the source directory tree."""
-    if not os.path.isdir(dest_dirname):
-        os.mkdir(dest_dirname)
-    os.chdir(dest_dirname)
-    source_dirlist = os.listdir(source_dirname)
-    source_dirlist.sort()
+    dest_dir = dest_dir.resolve()
+    if not dest_dir.isdir():
+        dest_dir.mkdir()
 
-    for filename in source_dirlist:
-        source_filename = source_dirname + os.sep + filename
-        dest_filename = dest_dirname + os.sep + filename
+    for fn in sorted(source_dir.iterdir()):
+        source_path = source_dir / fn
+        dest_path = dest_dir / fn
 
-        if os.path.isdir(source_filename):
+        if source_path.isdir():
             if relpath and not options.flatten:
-                newsource_dirname = os.pardir + os.sep + source_filename
+                newsource_dirname = dest_dir.parent / source_path
             else:
-                newsource_dirname = source_filename
+                newsource_dirname = source_path
 
             if options.flatten:
-                newdest_dirname = dest_dirname
+                newdest_dirname = dest_dir
             else:
-                newdest_dirname = dest_filename
+                newdest_dirname = dest_path
 
-            cd_dir(newsource_dirname, newdest_dirname, options, relpath)
+            process_dir(newsource_dirname, newdest_dirname, options, relpath)
         else:
-            ln_file(source_filename, dest_filename, options)
+            ln_file(source_path, dest_path, options)
 
 
 def main():
@@ -105,15 +100,15 @@ def main():
     (options, arguments) = get_options_and_arguments()
 
     if arguments:
-        source_dir = os.path.normpath(arguments[0])
-        relpath = os.path.abspath(source_dir) != source_dir
+        source_dir = Path(arguments[0]).resolve()
+        relpath = Path(source_dir).resolve() != source_dir
     else:
         relpath = 0
 
     if options.verbose and relpath:
-        print("Source directory", source_dir, "is a relative path.")
+        print(f"Source directory {source_dir} is a relative path.")
 
-        cd_dir(source_dir, os.getcwd(), options, relpath)
+        process_dir(source_dir, Path.cwd(), options, relpath)
 
 
 if __name__ == "__main__":

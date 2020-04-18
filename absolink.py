@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 """Converts relative symlinks into absolute symlinks."""
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
-import optparse
-import os
+import argparse
+from pathlib import Path
 
 
 def get_options_and_arguments():
     """Return the options and the arguments."""
     usage = "usage: %prog [options]"
-    parser = optparse.OptionParser(usage=usage)
+    parser = argparse.OptionParser(usage=usage)
+    parser.add_option("path", action="store", default=Path.cwd()),
     parser.add_option(
         "-q",
         "--quiet",
@@ -28,40 +29,31 @@ def get_options_and_arguments():
         help="Converts symbolic links to absolute symbolic" "links",
     )
 
-    options_and_arguments = parser.parse_args()
-
-    return options_and_arguments[0]
+    return parser.parse_args()
 
 
-def abs_link_file(link_file_name, options):
+def relink_file(link_fn, options):
     """Convert the link."""
-    link_target_file_name = os.readlink(link_file_name)
-    if not os.path.isabs(link_target_file_name):
-        absolute_source_file_name = os.path.realpath(link_target_file_name)
-
-        if options.verbose:
-            print("Absolutizing symlink to", absolute_source_file_name)
-        os.remove(link_file_name)
-        os.symlink(absolute_source_file_name, link_file_name)
+    target = Path(link_fn).resolve()
+    link_fn.unlink()
+    link_fn.symlink_to(target)
+    if options.verbose:
+        print(f"Relinked {link_fn} to {target}")
 
 
-def cd_dir(dir_name, options):
+def process_dir(dn, options):
     """Find and descend into subdirectories."""
-    os.chdir(dir_name)
-    dir_list = os.listdir(".")  # os.getcwd())
-
-    for file_name in dir_list:
-        if os.path.islink(file_name):
-            abs_link_file(file_name, options)
-        elif options.recursive and os.path.isdir(file_name):
-            cd_dir(file_name, options)
-            os.chdir("..")
+    for fn in Path(dn).iterdir():
+        if fn.is_symlink():
+            relink_file(fn, options)
+        elif options.recursive and fn.is_dir():
+            process_dir(fn, options)
 
 
 def main():
     """Get options and recursivley link."""
-    options = get_options_and_arguments()
-    cd_dir(os.getcwd(), options)
+    options, args = get_options_and_arguments()
+    process_dir(options.path, options)
 
 
 if __name__ == "__main__":
