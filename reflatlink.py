@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Relink a flat link dir."""
-from .flatlink import flat_link
-from .purgelink import purge_flat_links
+from flatlink import flat_link
+from purgelink import purge_flat_links
 
 
 def relink(src, dest):
