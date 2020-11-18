@@ -18,10 +18,18 @@ def flat_link(src, dest):
                 continue
             source_path = root_path / filename
             link_name = dest_path / filename
+
             if link_name.is_symlink():
-                if link_name.resolve() == source_path.resolve():
+                if link_name.resolve() != source_path.resolve():
+                    # Remove bad link
+                    link_name.unlink()
+                else:
+                    # Already linked
                     continue
-                link_name.unlink()
+            elif link_name.exists():
+                print(f"file: {link_name} blocking creation of symlink.")
+                continue
+
             print(f'ln "{source_path}" => "{link_name}"')
             link_name.symlink_to(source_path)
 

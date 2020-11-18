@@ -8,7 +8,7 @@ def purge_flat_links(dest):
     dest = Path(dest)
     for path in dest.iterdir():
         if path.is_symlink() and not path.readlink().exists():
-            print(path.readlin())
+            print(f"Broken link to {path.readlink()}")
             print(f"rm {path}")
             path.unlink()
 
