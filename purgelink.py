@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """purge broken links in a flat dir."""
-import os
+from pathlib import Path
 
 
 def purge_flat_links(dest):
     """Purge broken links in a flat dir."""
-    for filename in os.listdir(dest):
-        path = os.path.join(dest, filename)
-        if os.path.islink(path) and not os.path.exists(os.readlink(path)):
-            print(os.readlink(path))
-            print("rm {}".format(path))
-            os.remove(path)
+    dest = Path(dest)
+    for path in dest.iterdir():
+        if path.is_symlink() and not path.readlink().exists():
+            print(path.readlin())
+            print(f"rm {path}")
+            path.unlink()
 
 
 if __name__ == "__main__":

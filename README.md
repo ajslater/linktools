@@ -1,6 +1,6 @@
 # linktools
 
-Tools for creating and manipulating trees of symlinks
+Tools for creating and manipulating trees of symlinks. Some tools require Python 3.9
 
 ### flatlink
 Recursively walks a source directory and creates symbolic links of all those files into one flat target directory.
