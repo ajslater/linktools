@@ -9,7 +9,6 @@ import pytest
 from linktools.cli import main
 
 EXIT_USAGE: Final = 2
-OLD_NAMES: Final = ("absolink", "flatlink", "hierlink", "purgelink", "reflatlink")
 
 
 def _run(*argv: str | Path) -> None:
@@ -103,15 +102,6 @@ def test_hier_symlink_flatten(src: Path, dest: Path):
     _run("hier", "-q", "-s", "-f", src, dest)
     assert _names(dest) == [".dot.txt", "a.txt", "b.txt", "c.txt"]
     assert (dest / "b.txt").readlink() == src / "sub" / "b.txt"
-
-
-@pytest.mark.parametrize("name", OLD_NAMES)
-def test_old_names(capsys: pytest.CaptureFixture[str], name: str):
-    """Each command still answers to its old name."""
-    with pytest.raises(SystemExit) as excinfo:
-        main([name, "-h"])
-    assert excinfo.value.code == 0
-    assert capsys.readouterr().out.startswith("usage: linktools ")
 
 
 def test_no_command(capsys: pytest.CaptureFixture[str]):

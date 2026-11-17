@@ -33,11 +33,8 @@ def get_parser() -> ArgumentParser:
         func: Callable[..., None],
         *parents: ArgumentParser,
     ) -> ArgumentParser:
-        # Each module is named for the command it used to be.
-        alias = module.__name__.rpartition(".")[2]
         command = commands.add_parser(
             name,
-            aliases=[alias],
             parents=[quiet, *parents],
             help=module.__doc__,
             description=module.__doc__,

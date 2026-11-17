@@ -18,8 +18,7 @@ linktools COMMAND [-q] ...
 ```
 
 `linktools -h` lists the commands and `linktools COMMAND -h` shows each one's
-arguments. `-q` silences progress output. Each command also answers to its old
-script name, such as `linktools flatlink`.
+arguments. `-q` silences progress output.
 
 ### flat
 
