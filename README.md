@@ -4,37 +4,49 @@ Tools for creating and manipulating trees of symlinks.
 
 ## Install
 
-From a checkout, install the tools as commands on your path:
+linktools needs Python 3.15. From a checkout, install the `linktools` command on
+your path:
 
 ```sh
 uv tool install .
 ```
 
-## Tools
+## Usage
 
-### flatlink
+```sh
+linktools COMMAND [-q] ...
+```
 
-Recursively walks a source directory and creates symbolic links of all those
-files into one flat target directory.
+`linktools -h` lists the commands and `linktools COMMAND -h` shows each one's
+arguments. `-q` silences progress output. Each command also answers to its old
+script name, such as `linktools flatlink`.
 
-### purgelink
+### flat
 
-Remove broken symlinks
+`linktools flat SRC DEST` recursively walks SRC and creates symbolic links of
+all its files, but dotfiles and dotdirs, in the flat directory DEST.
 
-### reflatlink
+### purge
 
-purgelink and then flatlink. I use this to make a macOS wallpaper directory from
-a hierarchical pictures folder.
+`linktools purge DEST` removes broken symlinks from DEST.
+
+### reflat
+
+`linktools reflat SRC DEST` purges and then flat links. I use this to make a
+macOS wallpaper directory from a hierarchical pictures folder.
 
 ## Old
 
 These others are old and could be made more efficient if I ever used them
 
-### absolink
+### abs
 
-Recursively relinks relative symbolic links into absolute symbolic links.
+`linktools abs [-r] [PATH]` relinks relative symbolic links in PATH, or the
+current directory, into absolute symbolic links. `-r` descends into
+subdirectories.
 
-### hierlink
+### hier
 
-Recursively replicates a directory tree but with hard or symbolically linked
-files.
+`linktools hier [-s] [-f] SRC [DEST]` replicates the SRC directory tree in DEST,
+or the current directory, with hard linked files. `-s` makes symbolic links
+instead and `-f` links every file into DEST without the tree.

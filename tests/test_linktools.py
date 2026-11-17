@@ -1,17 +1,19 @@
-"""Run each link tool through its command line entry point."""
+"""Run each linktools command through the command line."""
 
-import sys
+from importlib.metadata import version
 from pathlib import Path
-from types import ModuleType
+lazy from typing import Final
 
 import pytest
 
-from linktools import absolink, flatlink, hierlink, purgelink, reflatlink
+from linktools.cli import main
+
+EXIT_USAGE: Final = 2
+OLD_NAMES: Final = ("absolink", "flatlink", "hierlink", "purgelink", "reflatlink")
 
 
-def _run(monkeypatch: pytest.MonkeyPatch, module: ModuleType, *argv: str | Path):
-    monkeypatch.setattr(sys, "argv", [module.__name__, *map(str, argv)])
-    module.main()
+def _run(*argv: str | Path) -> None:
+    main([str(arg) for arg in argv])
 
 
 def _names(path: Path) -> list[str]:
@@ -42,59 +44,87 @@ def dest(tmp_path: Path) -> Path:
     return dest.resolve()
 
 
-def test_flatlink(monkeypatch: pytest.MonkeyPatch, src: Path, dest: Path):
+def test_flat(monkeypatch: pytest.MonkeyPatch, src: Path, dest: Path):
     """Link every file but dotfiles into one flat dir, from relative paths."""
     monkeypatch.chdir(src.parent)
-    _run(monkeypatch, flatlink, "src", "dest")
+    _run("flat", "src", "dest")
     assert _names(dest) == ["a.txt", "b.txt"]
     assert (dest / "b.txt").readlink() == src / "sub" / "b.txt"
     assert (dest / "b.txt").read_text() == "b.txt"
 
 
-def test_purgelink(monkeypatch: pytest.MonkeyPatch, src: Path, dest: Path):
-    """Remove only broken links, even when the cwd is elsewhere."""
+def test_purge(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    src: Path,
+    dest: Path,
+):
+    """Quietly remove only broken links, even when the cwd is elsewhere."""
     (dest / "good").symlink_to(Path("..") / "src" / "a.txt")
     (dest / "broken").symlink_to(Path("..") / "src" / "missing.txt")
     monkeypatch.chdir(src / "sub")
-    _run(monkeypatch, purgelink, dest)
+    _run("purge", "-q", dest)
     assert _names(dest) == ["good"]
+    assert not capsys.readouterr().out
 
 
-def test_reflatlink(monkeypatch: pytest.MonkeyPatch, src: Path, dest: Path):
+def test_reflat(src: Path, dest: Path):
     """Purge broken links and link the files again."""
     (dest / "broken").symlink_to(src / "missing.txt")
     (dest / "a.txt").symlink_to(src / "sub" / "b.txt")
-    _run(monkeypatch, reflatlink, src, dest)
+    _run("reflat", src, dest)
     assert _names(dest) == ["a.txt", "b.txt"]
     assert (dest / "a.txt").readlink() == src / "a.txt"
 
 
-def test_absolink(monkeypatch: pytest.MonkeyPatch, src: Path):
+def test_abs(src: Path):
     """Make relative links absolute, descending only with --recursive."""
     (src / "link").symlink_to("a.txt")
     (src / "sub" / "link").symlink_to("b.txt")
-    _run(monkeypatch, absolink, "-q", src)
+    _run("abs", "-q", src)
     assert (src / "link").readlink() == src / "a.txt"
     assert (src / "sub" / "link").readlink() == Path("b.txt")
-    _run(monkeypatch, absolink, "-qr", src)
+    _run("abs", "-qr", src)
     assert (src / "sub" / "link").readlink() == src / "sub" / "b.txt"
 
 
-def test_hierlink(monkeypatch: pytest.MonkeyPatch, src: Path, dest: Path):
+def test_hier(monkeypatch: pytest.MonkeyPatch, src: Path, dest: Path):
     """Mirror the tree into the cwd with hard links."""
     monkeypatch.chdir(dest)
-    _run(monkeypatch, hierlink, "-q", src)
+    _run("hier", "-q", src)
     assert _names(dest) == [".dot.txt", ".hidden", "a.txt", "sub"]
     linked = dest / "sub" / "b.txt"
     assert not linked.is_symlink()
     assert linked.samefile(src / "sub" / "b.txt")
 
 
-def test_hierlink_symlink_flatten(
-    monkeypatch: pytest.MonkeyPatch, src: Path, dest: Path
-):
-    """Symlink the whole tree flat into the cwd."""
-    monkeypatch.chdir(dest)
-    _run(monkeypatch, hierlink, "-q", "-s", "-f", src)
+def test_hier_symlink_flatten(src: Path, dest: Path):
+    """Symlink the whole tree flat into an explicit dest."""
+    _run("hier", "-q", "-s", "-f", src, dest)
     assert _names(dest) == [".dot.txt", "a.txt", "b.txt", "c.txt"]
     assert (dest / "b.txt").readlink() == src / "sub" / "b.txt"
+
+
+@pytest.mark.parametrize("name", OLD_NAMES)
+def test_old_names(capsys: pytest.CaptureFixture[str], name: str):
+    """Each command still answers to its old name."""
+    with pytest.raises(SystemExit) as excinfo:
+        main([name, "-h"])
+    assert excinfo.value.code == 0
+    assert capsys.readouterr().out.startswith("usage: linktools ")
+
+
+def test_no_command(capsys: pytest.CaptureFixture[str]):
+    """Print usage and exit with a usage error without a command."""
+    with pytest.raises(SystemExit) as excinfo:
+        main([])
+    assert excinfo.value.code == EXIT_USAGE
+    assert "usage: linktools" in capsys.readouterr().err
+
+
+def test_version(capsys: pytest.CaptureFixture[str]):
+    """Print the package version."""
+    with pytest.raises(SystemExit) as excinfo:
+        main(["--version"])
+    assert excinfo.value.code == 0
+    assert capsys.readouterr().out.strip() == version("linktools")
