@@ -1,4 +1,5 @@
 #!/bin/bash
+# Symlink every file under a source dir into one flat target dir
 set -o nounset
 set -o errexit
 SRC_DIR="$1"
@@ -10,9 +11,9 @@ usage() {
   echo "Recursively walks <SOURCE_DIR> and creates symbolic links of all those files into one flat directory, <TARGET_DIR>"
 }
 
-if [[ -z "$SRC_DIR" || -z "$TARGET_DIR" ]]; then
-    usage
-    exit 1
+if [[ -z $SRC_DIR || -z $TARGET_DIR ]]; then
+  usage
+  exit 1
 fi
 
 find "$SRC_DIR" -type f -print0 | xargs -0 -I {} ln -sf {} "$TARGET_DIR"
